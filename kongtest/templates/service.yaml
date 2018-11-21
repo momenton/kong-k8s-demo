@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "kongtest.fullname" . }}
+  labels:
+    app: {{ template "kongtest.name" . }}
+    chart: {{ template "kongtest.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    "consul.hashicorp.com/service-sync": "true"
+    "consul.hashicorp.com/service-name": momenton-demo-site
+    "consul.hashicorp.com/service-tags": "momenton,demo"
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ template "kongtest.name" . }}
+    release: {{ .Release.Name }}
